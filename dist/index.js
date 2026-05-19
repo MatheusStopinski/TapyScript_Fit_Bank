@@ -3,18 +3,19 @@ Object.defineProperty(exports, "__esModule", { value: true });
 class bankAccount {
     accNumber;
     funds;
-    constructor(accNumber, initialFunds) {
+    constructor(accNumber, initialFunds = 0) {
         this.accNumber = accNumber;
         this.funds = initialFunds;
     }
+    ;
 }
 function main() {
-    const account1 = new bankAccount(123456789, 1000);
-    const account2 = new bankAccount(987654321, 2000);
-    const account3 = new bankAccount(98541, 40000);
-    console.log(`Account 1 Number: ${account1.accNumber}`);
-    console.log(`Account 2 Number: ${account2.accNumber}`);
-    console.log(`Account 3 Number: ${account3.accNumber}`);
+    const account1 = new bankAccount(1, 1000);
+    const account2 = new bankAccount(2);
+    const account3 = new bankAccount(3, 40000);
+    console.log(account1);
+    console.log(account2);
+    console.log(account3);
 }
 main();
 //# sourceMappingURL=index.js.map
