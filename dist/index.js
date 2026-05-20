@@ -2,13 +2,18 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const os = require('os');
 function loginInMemoryAcconts(account1, account2, account3) {
-    console.log(account1.tostring(), os.EOL + account2.tostring(), os.EOL + account3.tostring());
+    console.log(account1.toString(), os.EOL + account2.toString(), os.EOL + account3.toString());
 }
 ;
+var bankaccountType;
+(function (bankaccountType) {
+    bankaccountType[bankaccountType["SAVING"] = 0] = "SAVING";
+    bankaccountType[bankaccountType["CHECKING"] = 1] = "CHECKING";
+})(bankaccountType || (bankaccountType = {}));
 class bankAccount {
-    accType;
-    accNumber;
+    accType; // readonly: não pode ser alterado, corrente e poupança.
     funds;
+    accNumber;
     constructor(accType, accNumber, initialFunds = 0) {
         this.accType = accType;
         this.accNumber = accNumber;
@@ -27,7 +32,7 @@ class bankAccount {
         this.funds += value;
     }
     withdraw(value) {
-        if (this.accType === "SAVING" && this.funds < value) {
+        if (this.accType === bankaccountType.SAVING && this.funds < value) {
             console.log(`Insufficient funds in account ${this.accNumber}. Withdrawal denied.`);
             return false;
         }
@@ -37,16 +42,16 @@ class bankAccount {
         }
     }
     ;
-    tostring() {
+    toString() {
         return `account: [${this.accNumber}] -------> funds: [${this.funds}]`;
     }
     ;
 }
 ;
 function main() {
-    const account1 = new bankAccount('SAVING', 1, 1000);
-    const account2 = new bankAccount('CHECKING', 2);
-    const account3 = new bankAccount('SAVING', 3, 40000);
+    const account1 = new bankAccount(bankaccountType.SAVING, 1, 1000);
+    const account2 = new bankAccount(bankaccountType.CHECKING, 2);
+    const account3 = new bankAccount(bankaccountType.SAVING, 3, 40000);
     account1.withdraw(1500);
     account2.withdraw(2200);
     account3.deposit(30000);
