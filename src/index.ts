@@ -1,10 +1,18 @@
 const os = require('os');
 
-function loginInMemoryAcconts(account1: bankAccount, account2: bankAccount, account3: bankAccount) {
-    console.log(account1.toString(), os.EOL + account2.toString(), os.EOL + account3.toString());
+interface Logging {
+    toString(): string;
+}   
+
+function loginInMemoryObjects(...obj: Array<Logging>) {
+    console.log('Logging in-memory objects:');
+    const log = obj
+        .map(x => x.toString())
+        .join(os.EOL);
+    console.log(log);
 };
 
-class bankAccount {
+class bankAccount implements Logging {
     funds: number;
     accNumber: number; 
 
@@ -23,6 +31,10 @@ class bankAccount {
     }
 */
 
+    toLogEntry(): string {
+        return this.toString();
+    }
+
     deposit(value: number) {
         this.funds += value;
 }
@@ -36,11 +48,14 @@ class bankAccount {
     };
 };
 
-/* Mixins! Consigo “injetar” funcionalidades específicas em qualquer classe compatível. Isso aumenta modularidade com escalabilidade arquitetural.
+/* 
+
+Mixins! Consigo “injetar” funcionalidades específicas em qualquer classe compatível. Isso aumenta modularidade com escalabilidade arquitetural.
 
 O contra é que o fluxo do código fica menos explícito, porque parte da lógica é “costurada” dinamicamente. Em equipes grandes, isso pode dificultar debug, onboarding e leitura arquitetural. Outro ponto crítico é que múltiplos Mixins podem gerar colisão de métodos, comportamento imprevisível e acoplamento indireto.
 
 Ou seja: Só da pra usar se a flexibilidade realmente compensa a perda de simplicidade estrutural.
+
 */
 
 type banckAccountCronstructors <T> = new (...args: any[]) => T; 
@@ -81,7 +96,7 @@ function main() {
     account2.withdraw(2200);
     account3.deposit(30000);
 
-    loginInMemoryAcconts(account1, account2, account3); 
+    loginInMemoryObjects(account1, account2, account3); 
 }
 
 main ()

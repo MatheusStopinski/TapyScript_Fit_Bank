@@ -1,8 +1,12 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const os = require('os');
-function loginInMemoryAcconts(account1, account2, account3) {
-    console.log(account1.toString(), os.EOL + account2.toString(), os.EOL + account3.toString());
+function loginInMemoryObjects(...obj) {
+    console.log('Logging in-memory objects:');
+    const log = obj
+        .map(x => x.toString())
+        .join(os.EOL);
+    console.log(log);
 }
 ;
 class bankAccount {
@@ -21,6 +25,9 @@ class bankAccount {
             ( OU SEJA, USA O VALOR A DIREITA DEFINIDO SENÃO O DA ESQUERDA.)
         }
     */
+    toLogEntry() {
+        return this.toString();
+    }
     deposit(value) {
         this.funds += value;
     }
@@ -69,7 +76,7 @@ function main() {
     account1.withdraw(1500);
     account2.withdraw(2200);
     account3.deposit(30000);
-    loginInMemoryAcconts(account1, account2, account3);
+    loginInMemoryObjects(account1, account2, account3);
 }
 main();
 //# sourceMappingURL=index.js.map
