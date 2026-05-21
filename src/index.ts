@@ -27,21 +27,33 @@ class bankAccount {
         this.funds += value;
 }
 
-    withdraw(value: number): boolean {
-        this.funds -= value;
-            return true;
-    };
+withdraw(value: number): boolean {      
+ throw new Error('Method not implemented...');
+}
 
     toString() {
         return `account: [${this.accNumber}] -------> funds: [${this.funds}]`;
     };
 };
 
-class checkingBankAccount extends bankAccount {
-    constructor(accNumber: number, initialFunds: number = 0) {
-        super(accNumber, initialFunds);
-    }
-};   
+abstract class BankAccount {
+    
+}
+
+type banckAccountCronstructors <T> = new (...args: any[]) => T; 
+function withOverdraft<C extends banckAccountCronstructors<BankAccount>>(Class: C) {
+    return class extends Class {
+        constructor(...args: any[]) {
+            super(...args);
+    };
+
+    withdraw (value: number): boolean {
+        this.funds -= value;
+        return true;    
+    };
+  };   
+};
+
 
 class savingBankAccount extends bankAccount { 
     withdraw(value: number): boolean {
@@ -49,10 +61,20 @@ class savingBankAccount extends bankAccount {
             console.log(`Insufficient funds in account ${this.accNumber}. Withdrawal denied.`);
             return false;    
         } else {
-            return super.withdraw(value);
+            this.funds -= value;
+            return true;
         }
 };
 };
+
+class checkingBankAccount extends bankAccount {
+    withdraw(value: number): boolean {
+        this.funds -= value;
+        return true;    
+    };
+}
+
+const checkingBankAccount = withOverdraft(bankAccount);
 
 function main() {
     const account1 = new savingBankAccount(1, 1000);
