@@ -38,9 +38,9 @@ class bankAccount {
 
 /* Mixins! Consigo “injetar” funcionalidades específicas em qualquer classe compatível. Isso aumenta modularidade com escalabilidade arquitetural.
 
-O contra é que em Mixins, o fluxo do código fica menos explícito, porque parte da lógica é “costurada” dinamicamente. Em equipes grandes, isso pode dificultar debug, onboarding e leitura arquitetural. Outro ponto crítico é que múltiplos Mixins podem gerar colisão de métodos, comportamento imprevisível e acoplamento indireto.
+O contra é que o fluxo do código fica menos explícito, porque parte da lógica é “costurada” dinamicamente. Em equipes grandes, isso pode dificultar debug, onboarding e leitura arquitetural. Outro ponto crítico é que múltiplos Mixins podem gerar colisão de métodos, comportamento imprevisível e acoplamento indireto.
 
-Ou seja: Mixins são extremamente poderosos, mas devem ser usados quando a flexibilidade realmente compensa a perda de simplicidade estrutural.
+Ou seja: Só da pra usar se a flexibilidade realmente compensa a perda de simplicidade estrutural.
 */
 
 type banckAccountCronstructors <T> = new (...args: any[]) => T; 
