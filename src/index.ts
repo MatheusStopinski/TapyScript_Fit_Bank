@@ -12,7 +12,13 @@ function loginInMemoryObjects(...obj: Array<Logging>) {
     console.log(log);
 };
 
-class bankAccount implements Logging {
+function extractConstructorName(obj: any) {
+    if (obj?.__proto__.constructor.name) return obj?.__proto__.constructor.name;
+    else if (obj?.__proto__) return extractConstructorName(obj?.__proto__);  
+    else return null;
+};
+
+class bankAccount {
     funds: number;
     accNumber: number; 
 
@@ -23,17 +29,14 @@ class bankAccount implements Logging {
 };
 
 /* constructor------------PODE SER ASSIM TBM:
+
     constructor(accNumber: number, initialFunds?: number) {
         this.accNumber = accNumber;
         this.funds = initialFunds ?? 0; 
-        
-        ( OU SEJA, USA O VALOR A DIREITA DEFINIDO SENÃO O DA ESQUERDA.)
     }
-*/
 
-    toLogEntry(): string {
-        return this.toString();
-    }
+    ( OU SEJA, USA O VALOR A DIREITA DEFINIDO SENÃO O DA ESQUERDA.)
+*/
 
     deposit(value: number) {
         this.funds += value;
@@ -44,7 +47,7 @@ class bankAccount implements Logging {
 }
 
     toString() {
-        return `account: [${this.accNumber}] -------> funds: [${this.funds}]`;
+        return `account: [${this.accNumber}] [${extractConstructorName(this)}] ----------> funds: [${this.funds}]`;
     };
 };
 
@@ -72,6 +75,17 @@ function withOverdraft<C extends banckAccountCronstructors<bankAccount>>(Class: 
   };   
 };
 
+function withLogging<C extends banckAccountCronstructors<bankAccount>>(Class: C) {
+    return class extends Class implements Logging {
+        constructor(...args: any[]) {
+            super(...args);
+    };
+    toLogEntry(): string {
+        return this.toString();
+    };   
+};
+};
+
 
 class savingBankAccount extends bankAccount { 
     withdraw(value: number): boolean {
@@ -85,18 +99,19 @@ class savingBankAccount extends bankAccount {
 };
 };
 
-const checkingBankAccount = withOverdraft(bankAccount);
+const checkingBankAccount = withLogging(withOverdraft(bankAccount));
+const savingBankAccountWithLogging = withLogging(savingBankAccount);
 
 function main() {
-    const account1 = new savingBankAccount(1, 1000);
+    const account1 = new savingBankAccountWithLogging(1, 1000);
     const account2 = new checkingBankAccount(2);
-    const account3 = new savingBankAccount(3, 40000);
+    const account3 = new savingBankAccountWithLogging(3, 40000);
 
     account1.withdraw(1500);
     account2.withdraw(2200);
     account3.deposit(30000);
 
     loginInMemoryObjects(account1, account2, account3); 
-}
+};
 
 main ()

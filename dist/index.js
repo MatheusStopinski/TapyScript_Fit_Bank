@@ -9,6 +9,15 @@ function loginInMemoryObjects(...obj) {
     console.log(log);
 }
 ;
+function extractConstructorName(obj) {
+    if (obj?.__proto__.constructor.name)
+        return obj?.__proto__.constructor.name;
+    else if (obj?.__proto__)
+        return extractConstructorName(obj?.__proto__);
+    else
+        return null;
+}
+;
 class bankAccount {
     funds;
     accNumber;
@@ -18,16 +27,14 @@ class bankAccount {
     }
     ;
     /* constructor------------PODE SER ASSIM TBM:
+    
         constructor(accNumber: number, initialFunds?: number) {
             this.accNumber = accNumber;
             this.funds = initialFunds ?? 0;
-            
-            ( OU SEJA, USA O VALOR A DIREITA DEFINIDO SENÃO O DA ESQUERDA.)
         }
+    
+        ( OU SEJA, USA O VALOR A DIREITA DEFINIDO SENÃO O DA ESQUERDA.)
     */
-    toLogEntry() {
-        return this.toString();
-    }
     deposit(value) {
         this.funds += value;
     }
@@ -35,7 +42,7 @@ class bankAccount {
         throw new Error('Method not implemented...');
     }
     toString() {
-        return `account: [${this.accNumber}] -------> funds: [${this.funds}]`;
+        return `account: [${this.accNumber}] [${extractConstructorName(this)}] -------> funds: [${this.funds}]`;
     }
     ;
 }
@@ -49,6 +56,19 @@ function withOverdraft(Class) {
         withdraw(value) {
             this.funds -= value;
             return true;
+        }
+        ;
+    };
+}
+;
+function withLogging(Class) {
+    return class extends Class {
+        constructor(...args) {
+            super(...args);
+        }
+        ;
+        toLogEntry() {
+            return this.toString();
         }
         ;
     };
@@ -68,15 +88,17 @@ class savingBankAccount extends bankAccount {
     ;
 }
 ;
-const checkingBankAccount = withOverdraft(bankAccount);
+const checkingBankAccount = withLogging(withOverdraft(bankAccount));
+const savingBankAccountWithLogging = withLogging(savingBankAccount);
 function main() {
-    const account1 = new savingBankAccount(1, 1000);
+    const account1 = new savingBankAccountWithLogging(1, 1000);
     const account2 = new checkingBankAccount(2);
-    const account3 = new savingBankAccount(3, 40000);
+    const account3 = new savingBankAccountWithLogging(3, 40000);
     account1.withdraw(1500);
     account2.withdraw(2200);
     account3.deposit(30000);
     loginInMemoryObjects(account1, account2, account3);
 }
+;
 main();
 //# sourceMappingURL=index.js.map
