@@ -25,20 +25,26 @@ class bankAccount {
         this.funds += value;
     }
     withdraw(value) {
-        this.funds -= value;
-        return true;
+        throw new Error('Method not implemented...');
     }
-    ;
     toString() {
         return `account: [${this.accNumber}] -------> funds: [${this.funds}]`;
     }
     ;
 }
 ;
-class checkingBankAccount extends bankAccount {
-    constructor(accNumber, initialFunds = 0) {
-        super(accNumber, initialFunds);
-    }
+function withOverdraft(Class) {
+    return class extends Class {
+        constructor(...args) {
+            super(...args);
+        }
+        ;
+        withdraw(value) {
+            this.funds -= value;
+            return true;
+        }
+        ;
+    };
 }
 ;
 class savingBankAccount extends bankAccount {
@@ -48,12 +54,14 @@ class savingBankAccount extends bankAccount {
             return false;
         }
         else {
-            return super.withdraw(value);
+            this.funds -= value;
+            return true;
         }
     }
     ;
 }
 ;
+const checkingBankAccount = withOverdraft(bankAccount);
 function main() {
     const account1 = new savingBankAccount(1, 1000);
     const account2 = new checkingBankAccount(2);
