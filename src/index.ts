@@ -1,13 +1,19 @@
 const os = require('os');
 
 interface Logging {
-    toString(): string;
-}   
+    toLogEntry(): logyEntry;
+}
+
+type logyEntry = {
+    moment: Date;
+    message: string;
+}
 
 function loginInMemoryObjects(...obj: Array<Logging>) {
     console.log('Logging in-memory objects:');
     const log = obj
-        .map(x => x.toString())
+        .map(x => x.toLogEntry())
+        .map(x => `[${x.moment.toISOString()}] ${x.message}`)
         .join(os.EOL);
     console.log(log);
 };
@@ -80,8 +86,11 @@ function withLogging<C extends banckAccountCronstructors<bankAccount>>(Class: C)
         constructor(...args: any[]) {
             super(...args);
     };
-    toLogEntry(): string {
-        return this.toString();
+    toLogEntry(): logyEntry {
+        return {
+            moment: new Date(Date.now()),
+            message: this.toString()
+        };
     };   
 };
 };

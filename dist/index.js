@@ -4,7 +4,8 @@ const os = require('os');
 function loginInMemoryObjects(...obj) {
     console.log('Logging in-memory objects:');
     const log = obj
-        .map(x => x.toString())
+        .map(x => x.toLogEntry())
+        .map(x => `[${x.moment.toISOString()}] ${x.message}`)
         .join(os.EOL);
     console.log(log);
 }
@@ -42,7 +43,7 @@ class bankAccount {
         throw new Error('Method not implemented...');
     }
     toString() {
-        return `account: [${this.accNumber}] [${extractConstructorName(this)}] -------> funds: [${this.funds}]`;
+        return `account: [${this.accNumber}] [${extractConstructorName(this)}] ----------> funds: [${this.funds}]`;
     }
     ;
 }
@@ -68,7 +69,10 @@ function withLogging(Class) {
         }
         ;
         toLogEntry() {
-            return this.toString();
+            return {
+                moment: new Date(Date.now()),
+                message: this.toString()
+            };
         }
         ;
     };
