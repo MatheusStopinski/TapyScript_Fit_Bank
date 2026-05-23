@@ -1,4 +1,4 @@
-export default function extractConstructorName(obj) {
+export function extractConstructorName(obj) {
     if (obj?.__proto__.constructor.name)
         return obj?.__proto__.constructor.name;
     else if (obj?.__proto__)
