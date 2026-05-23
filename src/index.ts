@@ -1,28 +1,6 @@
-const os = require('os');
-
-interface Logging {
-    toLogEntry(): logyEntry;
-}
-
-type logyEntry = {
-    moment: Date;
-    message: string;
-}
-
-function loginInMemoryObjects(...obj: Array<Logging>) {
-    console.log('Logging in-memory objects:');
-    const log = obj
-        .map(x => x.toLogEntry())
-        .map(x => `[${x.moment.toISOString()}] ${x.message}`)
-        .join(os.EOL);
-    console.log(log);
-};
-
-function extractConstructorName(obj: any) {
-    if (obj?.__proto__.constructor.name) return obj?.__proto__.constructor.name;
-    else if (obj?.__proto__) return extractConstructorName(obj?.__proto__);  
-    else return null;
-};
+import { loginInMemoryObjects } from "./shared/logging.js";
+import type { logyEntry, Logging } from "./shared/logging.js";
+import NOVONOMEextractConstructorName from "./shared/utils.js";
 
 class bankAccount {
     funds: number;
@@ -53,7 +31,7 @@ class bankAccount {
 }
 
     toString() {
-        return `account: [${this.accNumber}] [${extractConstructorName(this)}] ----------> funds: [${this.funds}]`;
+        return `account: [${this.accNumber}] [${NOVONOMEextractConstructorName(this)}] ----------> funds: [${this.funds}]`;
     };
 };
 

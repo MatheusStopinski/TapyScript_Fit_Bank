@@ -1,24 +1,5 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-const os = require('os');
-function loginInMemoryObjects(...obj) {
-    console.log('Logging in-memory objects:');
-    const log = obj
-        .map(x => x.toLogEntry())
-        .map(x => `[${x.moment.toISOString()}] ${x.message}`)
-        .join(os.EOL);
-    console.log(log);
-}
-;
-function extractConstructorName(obj) {
-    if (obj?.__proto__.constructor.name)
-        return obj?.__proto__.constructor.name;
-    else if (obj?.__proto__)
-        return extractConstructorName(obj?.__proto__);
-    else
-        return null;
-}
-;
+import { loginInMemoryObjects } from "./shared/logging.js";
+import NOVONOMEextractConstructorName from "./shared/utils.js";
 class bankAccount {
     funds;
     accNumber;
@@ -43,7 +24,7 @@ class bankAccount {
         throw new Error('Method not implemented...');
     }
     toString() {
-        return `account: [${this.accNumber}] [${extractConstructorName(this)}] ----------> funds: [${this.funds}]`;
+        return `account: [${this.accNumber}] [${NOVONOMEextractConstructorName(this)}] ----------> funds: [${this.funds}]`;
     }
     ;
 }
