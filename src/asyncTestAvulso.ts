@@ -1,3 +1,5 @@
+import { readFile } from "fs";
+
 export function log(msg: string) { 
     console.log(msg, new Date(Date.now()).toISOString());
 };
@@ -25,10 +27,19 @@ setTimeout(() => {
     log('setTimeout'); // sexta mensagem, setTimeout seguindo a ordem!
 }, 4000);
 
+log('REGULAR veio primeiro.'); // segunda mensagem, pois é o regular, apenas seguindo a ordem!
+
 setTimeout(() => {
     log('setTimeout'); // sétima mensagem, setTimeout seguindo a ordem!
 }, 7000);
 
-log('REGULAR veio primeiro.'); // segunda mensagem, pois é o regular, apenas seguindo a ordem!
+log('Lendo arquivbo grande...');
+readFile('../TheFile.text', { encoding: 'utf8' }, (err, data) => {
+    if (err) {
+        log('OLHE O CAFÉ: ' + err); // provavelmente ao fazer a segunda etapa pensou mais de tantos segundos, ai pode mostrar como erro! 
+    } 
+log('Finalizou solicitação de leitura de arquivo grande...');
 
-}
+})
+
+};
