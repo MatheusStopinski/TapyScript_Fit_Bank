@@ -1,5 +1,8 @@
 import { loginInMemoryObjects } from "./shared/logging.js";
 import { checkingBankAccount, savingBankAccountWithLogging } from "./domain/models/bank.extensions.js";
+import { runAsyncTest } from "./asyncTestAvulso.js"; runAsyncTest();
+
+
 
 function main() {
     const account1 = new savingBankAccountWithLogging(1, 1000);
