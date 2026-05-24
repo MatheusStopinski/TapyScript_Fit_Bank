@@ -3,16 +3,17 @@ export function log(msg) {
 }
 ;
 export function runAsyncTest() {
-    log('Iniciando processamento do arquivo...');
+    log('Iniciando processamento...');
     setTimeout(() => {
-        log('Processamento em setTimeout...');
+        log('setTimeout');
     }, 2000);
     setTimeout(() => {
-        log('Processamento do arquivo concluído!');
+        log('setTimeout');
     }, 4000);
     setTimeout(() => {
-        log('Processamento do arquivo concluído!');
+        log('setTimeout');
     }, 7000);
+    log('Enquanto aguardou ele veio primeiro.');
 }
 ;
 //# sourceMappingURL=asyncTestAvulso.js.map

@@ -19,4 +19,6 @@ setTimeout(() => {
     log('setTimeout');
 }, 7000);
 
+log('Enquanto aguardou setTimeout, ele veio primeiro.');
+
 };
