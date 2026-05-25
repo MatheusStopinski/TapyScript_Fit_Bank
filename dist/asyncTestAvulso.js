@@ -1,11 +1,11 @@
-import { createReadStream, ReadStream } from "fs";
+import { readFile } from "fs";
 export function log(msg, buffer = null) {
-    const _msg = `${msg} ${new Date(Date.now())}`;
+    const _msg = `${msg} ${new Date().toISOString()}`;
     if (buffer) {
         buffer.push(_msg);
         if (buffer.length > 700) {
-            log(`Buffer cheio!`);
-            log(_msg);
+            console.log('Buffer cheio!');
+            console.log(_msg);
             buffer.length = 0;
         }
     }
@@ -13,34 +13,48 @@ export function log(msg, buffer = null) {
         console.log(_msg);
     }
 }
-;
-export function runAsyncTest() {
-    setImmediate(() => {
-        log('setImmediate'); // terceira mensagem, pois é o setImmediate, que tem prioridade sobre o setTimeout
-    });
-    log('Iniciando processamento...'); // primeira mensagem pois é o regular
-    setTimeout(() => {
-        log('setTimeout'); // quarta mensagem, pois é o setTimeout, o mais demorado!
-    }, 2000);
-    setInterval(() => {
-        log('Pega um café porfavor!');
-    }, 2000); // Se o tempo for igual, vence quem vem antes.
-    setTimeout(() => {
-        log('setTimeout'); // sexta mensagem, setTimeout seguindo a ordem!
-    }, 4000);
-    log('REGULAR veio primeiro.'); // segunda mensagem, pois é o regular, apenas seguindo a ordem!
-    setTimeout(() => {
-        log('setTimeout'); // sétima mensagem, setTimeout seguindo a ordem!
-    }, 7000);
-    log('Lendo arquivbo grande... OUTRO REGULAR');
-    const bufferStr = [];
-    const readStream = createReadStream('./TheFile.txt', { encoding: 'utf-8' });
-    readStream.on('data', (st) => log(`${st.length}`, bufferStr)); // .on é o listener, ou seja, o evento que vai ser disparado quando chegar um pedaço do arquivo, ou seja, um chunk de dados.-bufferStr é o array que vai armazenar os pedaços do arquivo lidos, ou seja, os chunks de dados.
-    readStream.on('end', () => {
-        log('Fechando readStream.on! (end, () => {...})');
-        readStream.close();
-        log('Finalizou solicitação de leitura de arquivo grande...');
+export function readBigFile() {
+    return new Promise((resolve, reject) => {
+        readFile('./TheFile.txt', { encoding: 'utf-8' }, (err, data) => {
+            if (err) {
+                reject(err);
+                return;
+            }
+            resolve(data);
+        });
     });
 }
-;
+export async function runAsyncTest() {
+    const bufferStr = [];
+    setImmediate(() => {
+        log('setImmediate');
+    });
+    log('Iniciando processamento...');
+    setTimeout(() => {
+        log('setTimeout 2s');
+    }, 2000);
+    const interval = setInterval(() => {
+        log('Pega um café por favor!');
+    }, 2000);
+    setTimeout(() => {
+        log('setTimeout 4s');
+    }, 4000);
+    log('REGULAR veio primeiro.');
+    setTimeout(() => {
+        log('setTimeout 7s');
+    }, 7000);
+    try {
+        log('Lendo arquivo grande...');
+        const data = await readBigFile();
+        log(`Arquivo carregado: ${data.length} caracteres`, bufferStr);
+        log('Leitura concluída.');
+    }
+    catch (err) {
+        log(`ERRO: ${err}`);
+    }
+    setTimeout(() => {
+        clearInterval(interval);
+        log('Interval encerrado.');
+    }, 10000);
+}
 //# sourceMappingURL=asyncTestAvulso.js.map
