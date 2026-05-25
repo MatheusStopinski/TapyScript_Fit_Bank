@@ -13,9 +13,7 @@ export const log = (msg, buffer = null) => {
     console.log(_msg);
 };
 export const readBigFile = async () => {
-    return await readFile('./TheFile.txt', {
-        encoding: 'utf-8'
-    });
+    return await readFile('./TheFile.txt', { encoding: 'utf-8' });
 };
 export const runAsyncTest = async () => {
     const bufferStr = [];

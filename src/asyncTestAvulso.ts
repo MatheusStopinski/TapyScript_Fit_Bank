@@ -24,11 +24,9 @@ export const log = (
     console.log(_msg);
 };
 
-export const readBigFile = async (): Promise<string> => {
+export const readBigFile = async (): Promise<string> => { // async transforma uma função em assíncrona. Na prática significa: “essa função pode pausar execução usando await sem travar o programa”.
 
-    return await readFile('./TheFile.txt', {
-        encoding: 'utf-8'
-    });
+    return await readFile('./TheFile.txt', { encoding: 'utf-8' });
 
 };
 
