@@ -12,6 +12,7 @@ export const log = (
         buffer.push(_msg);
 
         if (buffer.length > 700) {
+
             console.log('Buffer cheio!');
             console.log(_msg);
 
@@ -24,13 +25,13 @@ export const log = (
     console.log(_msg);
 };
 
-export const readBigFile = async (): Promise<string> => { // async transforma uma função em assíncrona. Na prática significa: “essa função pode pausar execução usando await sem travar o programa”.
+export const readBigFile = (): Promise<string> => {
 
-    return await readFile('./TheFile.txt', { encoding: 'utf-8' });
+    return readFile('./TheFile.txt', { encoding: 'utf-8' });
 
 };
 
-export const runAsyncTest = async (): Promise<void> => {
+export const runAsyncTest = (): void => {
 
     const bufferStr: string[] = [];
 
@@ -40,10 +41,7 @@ export const runAsyncTest = async (): Promise<void> => {
 
     setTimeout(() => log('setTimeout 2s'), 2000);
 
-    const interval = setInterval(
-        () => log('Pega um café por favor!'),
-        2000
-    );
+    const interval = setInterval( () => log('Pega um bom café! Acredito em você'), 2000);
 
     setTimeout(() => log('setTimeout 4s'), 4000);
 
@@ -51,28 +49,39 @@ export const runAsyncTest = async (): Promise<void> => {
 
     setTimeout(() => log('setTimeout 7s'), 7000);
 
-    try {
+    log('Lendo arquivo grande...');
 
-        log('Lendo arquivo grande...');
+    readBigFile()
+    
+    .then((data) => {
 
-        const data = await readBigFile();
+            log(
+                `Arquivo carregado: ${data.length} caracteres`,
+                bufferStr
+            );
 
-        log(
-            `Arquivo carregado: ${data.length} caracteres`,
-            bufferStr
-        );
+            log('Leitura concluída.');
 
-        log('Leitura concluída.');
+        })
 
-    } catch (err) {
+        .catch((err) => {
 
-        log(`ERRO: ${err}`);
+            log(`ERRO: ${err}`);
 
-    }
+        })
+
+        .finally(() => {
+
+            log('Finalizando Promise da leitura.');
+
+        });
 
     setTimeout(() => {
+
         clearInterval(interval);
-        log('Interval encerrado.');
+
+        log('Interval/Repetição encerrado.');
+
     }, 10000);
 
 };

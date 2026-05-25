@@ -1,4 +1,4 @@
 export declare const log: (msg: string, buffer?: Array<string> | null) => void;
 export declare const readBigFile: () => Promise<string>;
-export declare const runAsyncTest: () => Promise<void>;
+export declare const runAsyncTest: () => void;
 //# sourceMappingURL=asyncTestAvulso.d.ts.map
