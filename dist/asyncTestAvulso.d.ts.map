@@ -1,1 +1,1 @@
-{"version":3,"file":"asyncTestAvulso.d.ts","sourceRoot":"","sources":["../src/asyncTestAvulso.ts"],"names":[],"mappings":"AAEA,wBAAgB,GAAG,CAAC,GAAG,EAAE,MAAM,QAE9B;AAGD,wBAAgB,YAAY,IAAI,IAAI,CAsCjC"}
+{"version":3,"file":"asyncTestAvulso.d.ts","sourceRoot":"","sources":["../src/asyncTestAvulso.ts"],"names":[],"mappings":"AAEA,wBAAgB,GAAG,CAAC,GAAG,EAAE,MAAM,EAAE,MAAM,GAAE,KAAK,CAAC,MAAM,CAAC,GAAG,IAAW,QAgBnE;AAGD,wBAAgB,YAAY,IAAI,IAAI,CAsCjC"}

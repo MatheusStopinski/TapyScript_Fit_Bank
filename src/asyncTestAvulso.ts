@@ -1,7 +1,21 @@
 import { createReadStream, ReadStream } from "fs";
 
-export function log(msg: string) { 
-    console.log(msg, new Date(Date.now()).toISOString());
+export function log(msg: string, buffer: Array<string> | null = null) { 
+    const _msg = `${msg} ${new Date(Date.now())}`;
+
+    if (buffer) {
+        buffer.push(_msg);
+
+        if (buffer.length > 700) {
+            log(`Buffer cheio!`);
+            log(_msg);
+
+            buffer.length = 0;
+        }
+
+    } else {
+        console.log(_msg);
+    }
 };
 
 
@@ -33,10 +47,10 @@ setTimeout(() => {
 
 log('Lendo arquivbo grande... OUTRO REGULAR');
 
-const bufferStr: Array<string> = []; // Array para armazenar os pedaços do arquivo lidos, ou seja, os chunks de dados.
+const bufferStr: Array<string> = []; 
 const readStream = createReadStream('./TheFile.txt', { encoding: 'utf-8' }); 
 
-readStream.on('data', (st) => log (`${st.length}`)); // .on é o listener, ou seja, o evento que vai ser disparado quando chegar um chunk de dados, ou seja, quando chegar um pedaço do arquivo, ele vai logar o tamanho desse pedaço. 
+readStream.on('data', (st) => log(`${st.length}`, bufferStr)); // .on é o listener, ou seja, o evento que vai ser disparado quando chegar um pedaço do arquivo, ou seja, um chunk de dados.-bufferStr é o array que vai armazenar os pedaços do arquivo lidos, ou seja, os chunks de dados.
 
 readStream.on('end', () => { // .on é o listener, ou seja, o evento que vai ser disparado quando chegar no final do arquivo.-
     log('Fechando readStream.on! (end, () => {...})');
