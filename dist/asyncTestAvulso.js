@@ -1,4 +1,4 @@
-import { readFile } from "fs";
+import { createReadStream, ReadStream } from "fs";
 export function log(msg) {
     console.log(msg, new Date(Date.now()).toISOString());
 }
@@ -22,10 +22,12 @@ export function runAsyncTest() {
         log('setTimeout'); // sétima mensagem, setTimeout seguindo a ordem!
     }, 7000);
     log('Lendo arquivbo grande...');
-    readFile('../TheFile.text', { encoding: 'utf8' }, (err, data) => {
-        if (err) {
-            log('OLHE O CAFÉ: ' + err); // provavelmente ao fazer a segunda etapa pensou mais de tantos segundos, ai pode mostrar como erro! 
-        }
+    const bufferStr = []; // Array para armazenar os pedaços do arquivo lidos, ou seja, os chunks de dados.
+    const readStream = createReadStream('./TheFile.txt', { encoding: 'utf-8' });
+    readStream.on('data', (st) => log(`${st.length}`)); // .on é o listener, ou seja, o evento que vai ser disparado quando chegar um chunk de dados, ou seja, quando chegar um pedaço do arquivo, ele vai logar o tamanho desse pedaço. 
+    readStream.on('end', () => {
+        log('Fechando Stream!');
+        readStream.close();
         log('Finalizou solicitação de leitura de arquivo grande...');
     });
 }
