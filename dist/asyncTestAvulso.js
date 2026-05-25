@@ -1,5 +1,5 @@
-import { readFile } from "fs";
-export function log(msg, buffer = null) {
+import { readFile } from "fs/promises";
+export const log = (msg, buffer = null) => {
     const _msg = `${msg} ${new Date().toISOString()}`;
     if (buffer) {
         buffer.push(_msg);
@@ -8,41 +8,24 @@ export function log(msg, buffer = null) {
             console.log(_msg);
             buffer.length = 0;
         }
+        return;
     }
-    else {
-        console.log(_msg);
-    }
-}
-export function readBigFile() {
-    return new Promise((resolve, reject) => {
-        readFile('./TheFile.txt', { encoding: 'utf-8' }, (err, data) => {
-            if (err) {
-                reject(err);
-                return;
-            }
-            resolve(data);
-        });
+    console.log(_msg);
+};
+export const readBigFile = async () => {
+    return await readFile('./TheFile.txt', {
+        encoding: 'utf-8'
     });
-}
-export async function runAsyncTest() {
+};
+export const runAsyncTest = async () => {
     const bufferStr = [];
-    setImmediate(() => {
-        log('setImmediate');
-    });
+    setImmediate(() => log('setImmediate'));
     log('Iniciando processamento...');
-    setTimeout(() => {
-        log('setTimeout 2s');
-    }, 2000);
-    const interval = setInterval(() => {
-        log('Pega um café por favor!');
-    }, 2000);
-    setTimeout(() => {
-        log('setTimeout 4s');
-    }, 4000);
+    setTimeout(() => log('setTimeout 2s'), 2000);
+    const interval = setInterval(() => log('Pega um café por favor!'), 2000);
+    setTimeout(() => log('setTimeout 4s'), 4000);
     log('REGULAR veio primeiro.');
-    setTimeout(() => {
-        log('setTimeout 7s');
-    }, 7000);
+    setTimeout(() => log('setTimeout 7s'), 7000);
     try {
         log('Lendo arquivo grande...');
         const data = await readBigFile();
@@ -56,5 +39,5 @@ export async function runAsyncTest() {
         clearInterval(interval);
         log('Interval encerrado.');
     }, 10000);
-}
+};
 //# sourceMappingURL=asyncTestAvulso.js.map

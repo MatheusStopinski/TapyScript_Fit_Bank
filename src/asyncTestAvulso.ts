@@ -1,9 +1,14 @@
-import { readFile } from "fs";
+import { readFile } from "fs/promises";
 
-export function log(msg: string, buffer: Array<string> | null = null): void {
+export const log = (
+    msg: string,
+    buffer: Array<string> | null = null
+): void => {
+
     const _msg = `${msg} ${new Date().toISOString()}`;
 
     if (buffer) {
+
         buffer.push(_msg);
 
         if (buffer.length > 700) {
@@ -13,57 +18,40 @@ export function log(msg: string, buffer: Array<string> | null = null): void {
             buffer.length = 0;
         }
 
-    } else {
-        console.log(_msg);
+        return;
     }
-}
 
-export function readBigFile(): Promise<string> {
+    console.log(_msg);
+};
 
-    return new Promise((resolve, reject) => {
+export const readBigFile = async (): Promise<string> => {
 
-        readFile('./TheFile.txt', { encoding: 'utf-8' }, (err, data) => {
-
-            if (err) {
-                reject(err);
-                return;
-            }
-
-            resolve(data);
-
-        });
-
+    return await readFile('./TheFile.txt', {
+        encoding: 'utf-8'
     });
 
-}
+};
 
-export async function runAsyncTest(): Promise<void> {
+export const runAsyncTest = async (): Promise<void> => {
 
-    const bufferStr: Array<string> = [];
+    const bufferStr: string[] = [];
 
-    setImmediate(() => {
-        log('setImmediate');
-    });
+    setImmediate(() => log('setImmediate'));
 
     log('Iniciando processamento...');
 
-    setTimeout(() => {
-        log('setTimeout 2s');
-    }, 2000);
+    setTimeout(() => log('setTimeout 2s'), 2000);
 
-    const interval = setInterval(() => {
-        log('Pega um café por favor!');
-    }, 2000);
+    const interval = setInterval(
+        () => log('Pega um café por favor!'),
+        2000
+    );
 
-    setTimeout(() => {
-        log('setTimeout 4s');
-    }, 4000);
+    setTimeout(() => log('setTimeout 4s'), 4000);
 
     log('REGULAR veio primeiro.');
 
-    setTimeout(() => {
-        log('setTimeout 7s');
-    }, 7000);
+    setTimeout(() => log('setTimeout 7s'), 7000);
 
     try {
 
@@ -71,7 +59,10 @@ export async function runAsyncTest(): Promise<void> {
 
         const data = await readBigFile();
 
-        log(`Arquivo carregado: ${data.length} caracteres`, bufferStr);
+        log(
+            `Arquivo carregado: ${data.length} caracteres`,
+            bufferStr
+        );
 
         log('Leitura concluída.');
 
@@ -86,4 +77,4 @@ export async function runAsyncTest(): Promise<void> {
         log('Interval encerrado.');
     }, 10000);
 
-}
+};
